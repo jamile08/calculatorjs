@@ -22,7 +22,11 @@ function atribuirEventos() {
 
 // Inserir um número no display da calculadora
 function inserirNumero() {
-  if (isNaN(inputResultado.nodeValue)) {
-    inputResultado = EventTarget
+  if (!isNaN(inputResultado.value)) {
+    if (inputResultado.value == 0) {
+      inputResultado.value = event.target.innerText
+    } else {
+      inputResultado.value += event.target.innerText
+    }
   }
 }
