@@ -1,5 +1,5 @@
 class Calculadora {
-  inputResultado = document.getElementById('inputDisplayResultado').value
+  inputResultado = document.getElementById('inputDisplayResultado')
 
   calculation = {
     firstValue: 0,
@@ -13,7 +13,7 @@ class Calculadora {
   }
 
   // Atribuir eventos para os botões da calculadora
-  atribuirEventos() {
+  atribuirEventos = () => {
     for (let index = 0; index <= 9; index++) {
       document
         .getElementById('btnValor' + index)
@@ -22,11 +22,11 @@ class Calculadora {
   }
 
   // Inserir um número no display da calculadora
-  inserirNumero() {
-    if (isNaN(this.inputResultado) || this.inputResultado == 0) {
-      this.inputResultado = event.target.innerText
+  inserirNumero = () => {
+    if (isNaN(this.inputResultado.value) || this.inputResultado.value == 0) {
+      this.inputResultado.value = event.target.innerText
     } else {
-      this.inputResultado += event.target.innerText
+      this.inputResultado.value += event.target.innerText
     }
   }
 }
