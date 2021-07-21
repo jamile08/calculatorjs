@@ -1,11 +1,13 @@
 class Calculadora {
   inputResultado = document.getElementById('inputDisplayResultado')
 
-  calculation = {
-    firstValue: 0,
-    secondValue: 0,
-    calculator: null
+  calculo = {
+    valor1: 0,
+    valor2: 0,
+    operacao: null
   }
+
+  isCalculando = false
 
   constructor() {
     // Adicionar evento para iniciar quando a janela carregar
@@ -18,7 +20,7 @@ class Calculadora {
     for (let index = 0; index <= 9; index++) {
       document
         .getElementById('btnValor' + index)
-        .addEventListener('click', this.inserirNumero)
+        .addEventListener('click', this.clicarNumero)
     }
 
     // Atribuir evento para o botão C que limpa dos dados da calculadora
@@ -29,15 +31,40 @@ class Calculadora {
     // Atribuir evento ao botão de .
     document
       .getElementById('btnPonto')
-      .addEventListener('click', this.inserirPonto)
+      .addEventListener('click', this.clicarPonto)
+
+    // Atribuir evento aos botões de operador
+    document
+      .getElementById('btnSomar')
+      .addEventListener('click', this.clicarOperador)
+    document
+      .getElementById('btnSubtrair')
+      .addEventListener('click', this.clicarOperador)
+    document
+      .getElementById('btnMultiplicar')
+      .addEventListener('click', this.clicarOperador)
+    document
+      .getElementById('btnDividir')
+      .addEventListener('click', this.clicarOperador)
+
+    // Atribuir evento ao botão =
+    document
+      .getElementById('btnResultado')
+      .addEventListener('click', this.clicarResultado)
   }
 
   // Inserir um número no display da calculadora
-  inserirNumero = () => {
-    if (isNaN(this.inputResultado.value) || this.inputResultado.value == 0) {
+  clicarNumero = () => {
+    if (this.isCalculando) {
+      this.calculo.valor2 = Number(event.target.innerText)
       this.inputResultado.value = event.target.innerText
+      this.isCalculando = false
     } else {
-      this.inputResultado.value += event.target.innerText
+      if (isNaN(this.inputResultado.value) || this.inputResultado.value == 0) {
+        this.inputResultado.value = event.target.innerText
+      } else {
+        this.inputResultado.value += event.target.innerText
+      }
     }
   }
 
@@ -53,17 +80,62 @@ class Calculadora {
   // Função para limpar dados da calculadora
   limparDados = () => {
     this.inputResultado.value = ''
-    this.calculation.firstValue = 0
-    this.calculation.secondValue = 0
-    this.calculation.calculator = null
+    this.calculo.valor1 = 0
+    this.calculo.valor2 = 0
+    this.calculo.operacao = null
   }
 
   // Função para inserir o ponto
-  inserirPonto = () => {
+  clicarPonto = () => {
     if (this.inputResultado.value === '' || isNaN(this.inputResultado.value)) {
       this.inputResultado.value = '0.'
     } else if (!this.inputResultado.value.includes('.')) {
       this.inputResultado.value += '.'
+    }
+  }
+
+  // Função para atualizar o atributo calculation ao clicar nos operadores
+  clicarOperador = () => {
+    this.isCalculando = true
+    if (!isNaN(this.inputResultado.value)) {
+      this.calculo.valor1 = Number(this.inputResultado.value)
+    }
+
+    let operador = event.target.innerText
+
+    this.atribuirOperacao(operador)
+
+    this.inputResultado.value = operador
+  }
+
+  // Função para atribuir a operação ao atributo calculo.operacao
+  atribuirOperacao = operador => {
+    switch (operador) {
+      case '+':
+        this.calculo.operacao = this.somar
+        break
+      case '-':
+        this.calculo.operacao = this.subtracao
+        break
+      case '*':
+        this.calculo.operacao = this.multiplicacao
+        break
+      case '/':
+        this.calculo.operacao = this.divisao
+        break
+      default:
+        break
+    }
+  }
+
+  // Função ao clicar no botão = com o resultado
+  clicarResultado = () => {
+    if (this.calculo.operacao != null) {
+      let resultado = this.calculo.operacao(
+        this.calculo.valor1,
+        this.calculo.valor2
+      )
+      this.inputResultado.value = resultado
     }
   }
 }
